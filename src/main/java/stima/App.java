@@ -63,6 +63,13 @@ public class App {
         }
 
         Solver solver = new Solver();
+
+        System.out.println("Optimized atau tidak? (yes/no)");
+        String optimized = input.nextLine();
+        if (optimized.equalsIgnoreCase("yes"))
+        {
+            solver.setOptimized();
+        }
         
         boolean found = solver.solveQueens(Papan);
         
