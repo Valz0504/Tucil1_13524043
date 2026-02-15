@@ -208,4 +208,9 @@ public class Solver {
     {
         this.isOptimized = true;
     }
+
+    public int[][] getBoard()
+    {
+        return this.board;
+    }
 }
