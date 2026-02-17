@@ -1,0 +1,54 @@
+\documentclass[a4paper,10pt,oneside]{book} 
+\usepackage{CS_report}
+\usepackage[T1]{fontenc}   
+
+\makeatletter
+\pretocmd{\tableofcontents}{\hypersetup{linkcolor=black}}{}{}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+    \captionsetup[figure]{margin=1.5cm,font=small,name={Gambar},labelsep=colon}
+    \captionsetup[table]{margin=1.5cm,font=small,name={Tabel},labelsep=colon}
+    
+    \frontmatter
+    
+    \begin{titlepage}
+        \begin{center}
+            
+            \vspace{5cm}
+            {\LARGE \textbf{Laporan Tugas Kecil 1}}\\[0.5cm]
+
+            {\Large IF2211 \textsc{Strategi Algoritma}}\\[0.2cm]
+            {\large Penyelesaian Permainan \textit{\textbf{Queens}} Linkedin}\\[0.2cm]
+            {\normalsize Semester II Tahun 2025/2026}\\[1.5cm]
+
+            \includegraphics[width=13cm]{cover/cover.png}\\[2cm]
+            {\Large Emilio Justin}\\[0.8cm]
+            \Large 13524043\\
+            \vspace{2cm}
+            
+            {\normalsize 
+            Laboratorium Ilmu dan Rekayasa Komputasi\\
+            Program Studi Teknik Informatika\\
+            Sekolah Teknik Elektro dan Informatika\\
+            Institut Teknologi Bandung}\\[0.3cm]
+    
+        \end{center}
+    \end{titlepage}
+    
+    \tableofcontents
+    \listoffigures
+    \listoftables
+    \lstlistoflistings
+
+    \mainmatter
+    \input{chapters/01_Implementasi}
+    \input{chapters/02_SourceCode}
+    \input{chapters/03_Testing}
+    \input{chapters/lampiran}
+\end{document}

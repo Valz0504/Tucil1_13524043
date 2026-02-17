@@ -1,0 +1,272 @@
+\chapter{Pengujian}
+
+Penulis menyarankan apabila penguji menggunakan program dan memasukkan input dengan ukuran yang cukup besar, Window GUI program dapat di-\textit{resize} secara menual (tidak responsive).
+
+\section{Test 1: Papan berukuran $9 \times 9$}
+
+\begin{table}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \captionof{table}{Input Test 1}
+        \renewcommand{\arraystretch}{1.2}
+        \setlength{\tabcolsep}{40pt}
+        \begin{tabular}{|l|}
+            \hline
+            \phantom{text}\\
+            AAABBCCCD\\
+            ABBBBCECD\\
+            ABBBDCECD\\
+            AAABDCCCD\\
+            BBBBDDDDD\\
+            FGGGDDHDD\\
+            FGIGDDHDD\\
+            FGIGDDHDD\\
+            FGGGDDHHH\\
+            \phantom{text}\\
+            \hline
+        \end{tabular}
+    \end{minipage}
+\end{table}
+
+\subsubsection*{Output sebagai \texttt{.txt}}
+\begin{lstlisting}[basicstyle=\ttfamily\small, caption="Test 1 Output"]
+AAABBCC#D
+ABBB#CECD
+ABBBDC#CD
+A#ABDCCCD
+BBBBD#DDD
+FGG#DDHDD
+#GIGDDHDD
+FG#GDDHDD
+FGGGDDHH#
+\end{lstlisting}
+
+\subsubsection*{Output sebagai gambar}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{img/testing/tc1.png}
+    \caption{Output GUI --- Test 1}
+\end{figure}
+
+\section{Test 2: Papan berukuran $8 \times 8$}
+
+\begin{table}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \captionof{table}{Input Test 2}
+        \renewcommand{\arraystretch}{1.2}
+        \setlength{\tabcolsep}{40pt}
+        \begin{tabular}{|l|}
+            \hline
+            \phantom{text}\\
+                AAAAAAAA\\
+                BCCCDDDA\\
+                BCEEEEDA\\
+                BCCEEFFA\\
+                BBFEEFAA\\
+                BBFGGFAA\\
+                HHFFFFAA\\
+                HAAAAAAA\\
+            \phantom{text}\\
+            \hline
+        \end{tabular}
+    \end{minipage}
+\end{table}
+
+\subsubsection*{Output sebagai \texttt{.txt}}
+\begin{lstlisting}[basicstyle=\ttfamily\small, caption="Test Case 2 Output"]
+AAAAAAA#
+BC#CDDDA
+BCEEEE#A
+BCCE#FFA
+B#FEEFAA
+BBF#GFAA
+HHFFF#AA
+#AAAAAAA
+\end{lstlisting}
+
+\subsubsection*{Output sebagai gambar}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{img/testing/tc2.png}
+    \caption{Output GUI --- Test 2}
+\end{figure}
+
+\section{Test 3: Papan berukuran $7 \times 7$}
+
+\begin{table}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \captionof{table}{Input Test 3}
+        \renewcommand{\arraystretch}{1.2}
+        \setlength{\tabcolsep}{40pt}
+        \begin{tabular}{|l|}
+            \hline
+            \phantom{text}\\
+                ABBCCDD\\
+                AABBCDD\\
+                ABBBBEE\\
+                BBBBBBE\\
+                BBFBBBB\\
+                BFFFBBB\\
+                GGGGGBB\\
+            \phantom{text}\\
+            \hline
+        \end{tabular}
+    \end{minipage}
+\end{table}
+
+\subsubsection*{Output sebagai \texttt{.txt}}
+\begin{lstlisting}[basicstyle=\ttfamily\small, caption="Test Case 3 Output"]
+ABB#CDD
+AABBC#D
+#BBBBEE
+BBBBBB#
+BB#BBBB
+BFFF#BB
+G#GGGBB
+\end{lstlisting}
+
+\subsubsection*{Output sebagai gambar}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{img/testing/tc3.png}
+    \caption{Output GUI --- Test 3}
+\end{figure}
+
+\section{Test 4: Papan tidak memiliki solusi}
+
+\begin{table}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \captionof{table}{Input Test 4}
+        \renewcommand{\arraystretch}{1.2}
+        \setlength{\tabcolsep}{40pt}
+        \begin{tabular}{|l|}
+            \hline
+            \phantom{text}\\
+                AAAAAA\\
+                AAAAAA\\
+                AAAAAA\\
+                AAAAAA\\
+                AAAAAA\\
+                ABCDEF\\
+            \phantom{text}\\
+            \hline
+        \end{tabular}
+    \end{minipage}
+\end{table}
+
+\subsubsection*{Output sebagai gambar}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{img/testing/tc4.png}
+    \caption{Output GUI --- Test 4}
+\end{figure}
+
+\section{Test 5: Input tidak valid}
+
+\begin{table}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \captionof{table}{Input Test 5}
+        \renewcommand{\arraystretch}{1.2}
+        \setlength{\tabcolsep}{40pt}
+        \begin{tabular}{|l|}
+            \hline
+            \phantom{text}\\
+                ABBCCDD\\
+                AABBCDD\\
+                ABBBBEE\\
+                BBBBBBE\\
+                BBFBBBB\\
+                BFFFBBB\\
+                GGGG\\
+            \phantom{text}\\
+            \hline
+        \end{tabular}
+    \end{minipage}
+\end{table}
+
+\subsubsection*{Output sebagai gambar}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{img/testing/tc5.png}
+    \caption{Output GUI --- Test 5}
+\end{figure}
+
+\section{Test 6: Papan tidak memiliki solusi}
+
+\begin{table}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \captionof{table}{Input Test 6}
+        \renewcommand{\arraystretch}{1.2}
+        \setlength{\tabcolsep}{40pt}
+        \begin{tabular}{|l|}
+            \hline
+            \phantom{text}\\
+                AAABB\\
+                ACBBB\\
+                ACDBB\\
+                ACDDB\\
+                CCDDB\\
+            \phantom{text}\\
+            \hline
+        \end{tabular}
+    \end{minipage}
+\end{table}
+
+\subsubsection*{Output sebagai gambar}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{img/testing/tc6.png}
+    \caption{Output GUI --- Test 6}
+\end{figure}
+
+\section{Test 7: Papan berukuran $5 \times 5$}
+
+\begin{table}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \captionof{table}{Input Test 7}
+        \renewcommand{\arraystretch}{1.2}
+        \setlength{\tabcolsep}{40pt}
+        \begin{tabular}{|l|}
+            \hline
+            \phantom{text}\\
+                AAABBC\\
+                ADDBBC\\
+                ADDEEC\\
+                AFFEEC\\
+                AFFEEC\\
+                AFFGGC\\
+            \phantom{text}\\
+            \hline
+        \end{tabular}
+    \end{minipage}
+\end{table}
+
+\subsubsection*{Output sebagai \texttt{.txt}}
+\begin{lstlisting}[basicstyle=\ttfamily\small, caption="Test Case 7 Output"]
+AAABB#
+ADD#BC
+A#DEEC
+AFFE#C
+AF#EEC
+#FFGGC
+\end{lstlisting}
+
+\subsubsection*{Output sebagai gambar}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{img/testing/tc7.png}
+    \caption{Output GUI --- Test 7}
+\end{figure}

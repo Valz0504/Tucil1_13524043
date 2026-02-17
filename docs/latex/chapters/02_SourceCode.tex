@@ -1,0 +1,592 @@
+\chapter{Source Code}
+
+Penulis akan menampilkan \textit{source code} penuh untuk file \texttt{Board.java} dan \texttt{Solver.java} sedangkan untuk file \texttt{Page.java} hanya akan ditampilkan spesifikasi dari setiap fungsi atau prosedur.
+
+\section{Board.java}
+
+\begin{lstlisting}[language=Java, caption={Board.java -- Board Entity Class}]
+package stima.modules;
+
+public class Board {
+    
+    /**
+     * Atribut
+     */
+    private char[][] content;
+    private int rows, cols;
+
+    /**
+     * { Membuat Board kosong berdasarkan masukan jumlah baris dan kolom }
+     * 
+     * @param row
+     * @param col
+     */
+    public Board(int row, int col)
+    {
+        this.rows = row;
+        this.cols = col;
+        this.content = new char[row][col];
+    }
+
+    /**
+     * { Membuat Board dengan mengcopy Board lain }
+     * 
+     * @param Papan
+     */
+    public Board(Board Papan)
+    {
+        this.rows = Papan.rows;
+        this.cols = Papan.cols;
+        this.content = new char[Papan.rows][Papan.cols];
+        for (int i = 0; i < this.rows; i++)
+        {
+            for (int j = 0; j < this.cols; j++) 
+            {
+                this.setElmt(i, j, Papan.content[i][j]);
+            }
+        }
+    }
+
+    /**
+     * Selektor baris
+     * 
+     * @return jumlah baris dari Boardnya
+     */
+    public int getRow()
+    {
+        return this.rows;
+    }
+
+    /**
+     * Selektor kolom
+     * 
+     * @return jumlah kolom dari Boardnya
+     */
+    public int getCol()
+    {
+        return this.cols;
+    }
+
+    /**
+     * Getter element
+     * 
+     * @param row
+     * @param col
+     * @return elemen yang berada di baris row dan kolom col
+     */
+    public char getElmt(int row, int col)
+    {
+        return this.content[row][col];
+    }
+
+    /**
+     * { Set elemen pada Board dengan value baru }
+     * 
+     * @param row
+     * @param col
+     * @param value
+     */
+    public void setElmt(int row, int col, char value)
+    {
+        this.content[row][col] = value;
+    }
+}    
+\end{lstlisting}
+
+\section{Solver.java}
+
+\begin{lstlisting}[language=Java, caption={Solver.java -- Algoritma Solver Queens}]
+package stima.modules;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.function.BiConsumer;
+
+public class Solver {
+
+    /**
+     * Atribut
+     */
+    private int[] color;
+    private int[] usedColumn;
+    private int[][] board;
+    private int[][] solution;
+    private Duration executionTime;
+    private int caseCount;
+    private int solutionCount;
+    private int delayMs = 30;
+    private boolean isOptimized = false;
+    private volatile boolean cancelled = false;
+    private BiConsumer<int[][], Board> stepBack = null;
+
+    /**
+     * Parent function untuk solve queens dengan inisiasi atribut dan pemanggilan prosedur lain
+     * 
+     * @param Papan
+     * @return true jika solusi ada, false jika tidak
+     */
+    public boolean solveQueens(Board Papan)
+    {
+        color = new int[26];
+        usedColumn = new int[Papan.getCol()];
+        board = new int[Papan.getRow()][Papan.getCol()];
+        solution = new int[Papan.getRow()][Papan.getCol()];
+        this.caseCount = 0;
+        this.solutionCount = 0;
+        
+        Instant start = Instant.now();
+        solveBruteForce(0, Papan);
+        Instant end = Instant.now();
+        
+        this.executionTime = Duration.between(start, end);
+        
+        if (solutionCount > 0) {
+            for (int i = 0; i < Papan.getRow(); i++) {
+                for (int j = 0; j < Papan.getCol(); j++) {
+                    board[i][j] = solution[i][j];
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Algoritma brute force backtracking tanpa heuristik yang mencoba menempatkan satu Queen di setiap baris
+     * dengan percobaan untuk menempatkannya di masing-masing kolom, kompleksitasnya O(n^n)
+     * 
+     * Ini ga ada heuristik atau pruning semacamnya sih kalau menurut saya, dengan mengetahui aturan permainan,
+     * better brute force untuk setiap baris, coba tempatkan Queen di masing-masing kolom lalu lanjut ke baris selanjutnya
+     * 
+     * @param row
+     * @param Papan
+     */
+    private void solveBruteForce(int row, Board Papan)
+    {
+        if (cancelled) return;
+        
+        if (this.isOptimized == true) 
+        {
+            caseCount++;
+        }
+
+        if (row == Papan.getRow()) 
+        {   
+            if (this.isOptimized == true)
+            {
+                solutionCount++;
+                for (int i = 0; i < Papan.getRow(); i++)
+                {
+                    for (int j = 0; j < Papan.getCol(); j++)
+                    {
+                        solution[i][j] = board[i][j];
+                    }
+                }
+                return;
+            }
+            else
+            {
+                caseCount++;
+                if (isBoardValid(Papan.getRow() - 1, Papan))
+                {
+                    solutionCount++;
+                    for (int i = 0; i < Papan.getRow(); i++) 
+                    {
+                        for (int j = 0; j < Papan.getCol(); j++) 
+                        {
+                            solution[i][j] = board[i][j];
+                        }
+                    }
+                }
+                return;
+            }
+
+        }
+
+        for (int col = 0; col < Papan.getCol(); col++)
+        {
+            if (this.isOptimized == true)
+            {
+                int warna = Papan.getElmt(row, col) - 'A';
+                
+                if (usedColumn[col] == 0 && color[warna] == 0 && check8Direction(row, col, Papan))
+                {
+                    color[warna] = 1;
+                    board[row][col] = 1;
+                    usedColumn[col] = 1;
+
+                    debugCases(Papan);
+
+                    solveBruteForce(row+1, Papan);
+
+                    color[warna] = 0;
+                    board[row][col] = 0;
+                    usedColumn[col] = 0;
+                }
+            }
+            else
+            {
+                board[row][col] = 1;
+    
+                debugCases(Papan);
+    
+                solveBruteForce(row+1, Papan);
+    
+                board[row][col] = 0;
+            }
+        }
+    }
+
+    /**
+     * { Mengecek 8 arah adjacent apakah ada Queen yang ditempatkan atau tidak }
+     * 
+     * @param row
+     * @param col
+     * @param Papan
+     * 
+     * @return true jika di ke 8 arah tidak ada queens yang diletakkan, false jika ada
+     */
+    private boolean check8Direction(int row, int col, Board Papan)
+    {
+        for (int i = -1; i <= 1; i++) 
+        {
+            for (int j = -1; j <= 1; j++)
+            {
+                if (i == 0 && j == 0) continue;
+
+                int newrow = row + i, newcol = col + j;
+                if (newrow >= 0 && newrow < Papan.getRow() && newcol >= 0 && newcol < Papan.getCol() && board[newrow][newcol] == 1) return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * { Mengecek apakah Board merupakan solusi yang valid untuk permainan Queens }
+     * 
+     * @param row
+     * @param Papan
+     * 
+     * @return true jika Board valid, false jika tidak
+     */
+    public boolean isBoardValid(int row, Board Papan)
+    {
+        for (int i = 0; i <= row; i++)
+        {
+            for (int j = 0; j < Papan.getCol(); j++)
+            {
+                if (board[i][j] == 1)
+                {
+                    for (int k = 0; k < i; k++)
+                    {
+                        if (board[k][j] == 1) return false;
+                    }
+                    
+                    int warna = Papan.getElmt(i, j) - 'A';
+                    for (int r = 0; r < i; r++)
+                    {
+                        for (int c = 0; c < Papan.getCol(); c++)
+                        {
+                            if (board[r][c] == 1 && (Papan.getElmt(r, c) - 'A') == warna)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                    
+                    if (!check8Direction(i, j, Papan)) return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Print kondisi papan
+     * 
+     * @param Papan
+     */
+    public void printBoard(Board Papan)
+    {
+        for (int i = 0; i < Papan.getRow(); i++)
+        {
+            for (int j = 0; j < Papan.getCol(); j++)
+            {
+                System.out.print(board[i][j] == 1 ? '#' : Papan.getElmt(i, j));
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * Live Update Papan
+     * 
+     * @param Papan
+     */
+    private void debugCases(Board Papan)
+    {
+        if (stepBack != null) {
+            int[][] snapshot = new int[board.length][board[0].length];
+            for (int i = 0; i < board.length; i++) {
+                System.arraycopy(board[i], 0, snapshot[i], 0, board[i].length);
+            }
+            stepBack.accept(snapshot, Papan);
+        }
+
+        if (stepBack == null) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+            System.out.println("Finding solution...");
+            System.out.flush();
+            this.printBoard(Papan);
+            System.out.flush();
+        }
+
+        try {
+            Thread.sleep(delayMs);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            cancelled = true;
+        }
+    }
+
+    /**
+     * Getter execution time
+     * 
+     * @return
+     */
+    public Duration getExecutionTime() 
+    {
+        return this.executionTime;
+    }
+
+    /**
+     * Getter case count
+     * 
+     * @return
+     */
+    public int getCaseCount() 
+    {
+        return this.caseCount;
+    }
+
+    /**
+     * Getter solution count
+     * 
+     * @return
+     */
+    public int getSolutionCount() 
+    {
+        return this.solutionCount;
+    }
+
+    /**
+     * Setter delayMs
+     * 
+     * @param delayMs
+     */
+    public void setDelay(int delayMs) 
+    {
+        this.delayMs = delayMs;
+    }
+
+    /**
+     * Setter isOptimized
+     * 
+     * @return
+     */
+    public void setOptimized() 
+    {
+        this.isOptimized = true;
+    }
+
+    /**
+     * Getter Board
+     * 
+     * @return
+     */
+    public int[][] getBoard()
+    {
+        return this.board;
+    }
+
+    /**
+     * Set callback yang dipanggil setiap langkah solver
+     * 
+     * @param callback menerima (int[][] boardSnapshot, Board papan)
+     */
+    public void setStepBack(BiConsumer<int[][], Board> callback)
+    {
+        this.stepBack = callback;
+    }
+
+    /**
+     * Cancel solver yang sedang berjalan
+     */
+    public void cancel()
+    {
+        this.cancelled = true;
+    }
+
+    /**
+     * Cek apakah solver sudah di-cancel
+     */
+    public boolean isCancelled()
+    {
+        return this.cancelled;
+    }
+}
+\end{lstlisting}
+
+\section{Page.java}
+
+\begin{lstlisting}[language=Java, caption={Page.java -- Graphical User Interface}]
+package stima.gui;
+
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.control.*;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.FileChooser;
+import javafx.util.Duration;
+import javafx.stage.Stage;
+
+import stima.modules.Board;
+import stima.modules.Solver;
+
+import javax.imageio.ImageIO;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Page extends Application {
+
+    /**
+     * Atribut
+     */
+    private static final Color[] REGION_COLORS = 
+    {
+        Color.web("#ff6d6d"),
+        Color.web("#cdd1ff"), 
+        Color.web("#45B7D1"),
+        Color.web("#8785ff"),
+        Color.web("#cfb253"),
+        Color.web("#ff99ff"),
+        Color.web("#8ce4ce"), 
+        Color.web("#F7DC6F"), 
+        Color.web("#ddd2ff"), 
+        Color.web("#ffe2cb"), 
+        Color.web("#ffc089"), 
+        Color.web("#82E0AA"), 
+        Color.web("#F1948A"), 
+        Color.web("#AED6F1"), 
+        Color.web("#D7BDE2"), 
+        Color.web("#ff8bda"), 
+        Color.web("#FAD7A0"), 
+        Color.web("#afdfff"), 
+        Color.web("#f3ff72"), 
+        Color.web("#a2ffd5"), 
+        Color.web("#cff18f"), 
+        Color.web("#c6dffc"), 
+        Color.web("#cfffd1"), 
+        Color.web("#46d36b"), 
+        Color.web("#ffbdbd"), 
+        Color.web("#62ffda"), 
+    };
+    private Board papan;
+    private Solver solver;
+    private GridPane boardGrid;
+    private Label statusLabel;
+    private Label timeLabel;
+    private Label caseLabel;
+    private CheckBox optimizedCheck;
+    private Slider delaySlider;
+    private Label delayValueLabel;
+    private Button solveBtn;
+    private Button stopBtn;
+    private Button loadBtn;
+    private Button saveBtn;
+    private Button saveImageBtn;
+    private Thread solverThread;
+    private boolean solving;
+    private StackPane boardContainer;
+
+    @Override
+    public void start(Stage primaryStage);
+
+    /**
+     * Load file test case
+     */
+    private void loadFile(Stage stage);
+
+    /**
+     * Solve Queens Board
+     */
+    private void solve(); 
+
+    /**
+     * Menghentikan solver yang sedang berjalan
+     */
+    private void stopSolving();
+
+    /**
+     * Render board ke GridPane
+     */
+    private void renderBoard(int[][] solution); 
+
+    /**
+     * Save solusi ke file
+     */
+    private void saveSolution(Stage stage); 
+
+    /**
+     * Save board sebagai image (PNG)
+     */
+    private void saveAsImage(Stage stage); 
+
+    /**
+     * { Styling button }
+     * 
+     * @param color
+     * 
+     * @return
+     */
+    private String buttonStyle(String color);
+
+    private String toHex(Color color);
+
+    /**
+     * { Menampilkan pop up alert }
+     * 
+     * @param title
+     * @param message
+     * 
+     * @return
+     */
+    private void showAlert(String title, String message);
+
+    /**
+     * Notifikasi pop up muncul ketika solved
+     */
+    private void showSolvePopUp(String message, String bgColor);
+
+    public static void main(String[] args) 
+    {
+        launch(args);
+    }
+}
+\end{lstlisting}

@@ -1,0 +1,95 @@
+\chapter{Implementasi}
+
+Queens adalah gim logika yang tersedia pada situs jejaring profesional LinkedIn. Tujuan dari gim ini menempatkan \textit{queen} pada sebuah papan persegi berwarna sehingga terdapat hanya satu \textit{queen} pada tiap baris, kolom, dan daerah warna. Selain itu, satu \textit{queen} tidak dapat ditempatkan bersebelahan dengan \textit{queen} lainnya, termasuk secara diagonal. Penyelesaian gim ini diprogram dengan bahasa Java, memanfaatkan \textit{toolkit} JavaFX untuk GUI (Graphical User Interface)-nya. Algoritma \textit{brute force} ditekankan untuk menyelesaikan gim ini.
+
+\section{Brute Force}
+
+Algoritma \textit{brute force} yang diimplementasikan bersifat murni, yaitu mengenumerasi seluruh penempatan \textit{queen} yang mungkin berdasarkan aturan permainan. Penulis memanfaatkan \textit{backtracking} tanpa adanya \textit{pruning} sehingga algoritma tetap mengecek seluruh kemungkinan posisi \textit{queen}. 
+
+Algoritma utama \textit{brute force} terdapat di prosedur \texttt{solveBruteForce(int row, Board papan)} yang alur kerja sederhananya adalah sebagai berikut:
+
+\begin{enumerate}
+    \item Pada awal pemanggilan prosedur (pertama kali), parameter yang di-\textit{assign} adalah $0$ dan \texttt{papan} yang sudah terisi.
+    \item Algoritma akan mencoba meletakkan \textit{queen} di setiap kolom dengan adanya \textit{backtracking} di baris \texttt{row}, lalu melanjutkan pemanggilan dengan parameter \texttt{row} yang lebih dalam.
+    \item Jika pada saat ini nilai \texttt{row} sama dengan baris papan yang sebenarnya, akan dilakukan pengecekan apakah konfigurasi papan yang sudah ditempatkan \textit{queen} valid.
+    \item Jika valid, atribut \texttt{solution[][]} akan di-\textit{update} dengan konfigurasi papan tersebut.
+\end{enumerate}
+
+Dikarenakan penulis memberikan opsi untuk mengoptimasi komputasi dengan menyediakan fitur \textit{optimized} maka terdapat trik yang dapat mempercepat komputasi, yaitu dengan memoisasi kolom dan warna yang sudah terpakai, kasus yang bertabrakan dengan hal tersebut akan dilewati dan tidak dicek.
+
+Algoritma murni tanpa optimasi memiliki kompleksitas waktu $O(N^N)$ karena untuk setiap baris, akan dicoba $N$ kolom dari konfigurasi papan sebelumnya.
+
+\begin{algorithm}[H]
+\caption{Algoritma Brute Force Queen}
+\begin{algorithmic}[1]
+\Procedure{solveBruteForce}{row, Papan}
+
+\If{cancelled}
+    \State \Return
+\EndIf
+
+\If{isOptimized = true}
+    \State caseCount $\gets$ caseCount + 1
+\EndIf
+
+\If{row = Papan.getRow()}
+    \If{isOptimized = true}
+        \State solutionCount $\gets$ solutionCount + 1
+        \For{$i \gets 0$ to Papan.getRow() - 1}
+            \For{$j \gets 0$ to Papan.getCol() - 1}
+                \State solution[i][j] $\gets$ board[i][j]
+            \EndFor
+        \EndFor
+        \State \Return
+    \Else
+        \State caseCount $\gets$ caseCount + 1
+        \If{isBoardValid(Papan.getRow() - 1, Papan)}
+            \State solutionCount $\gets$ solutionCount + 1
+            \For{$i \gets 0$ to Papan.getRow() - 1}
+                \For{$j \gets 0$ to Papan.getCol() - 1}
+                    \State solution[i][j] $\gets$ board[i][j]
+                \EndFor
+            \EndFor
+        \EndIf
+        \State \Return
+    \EndIf
+\EndIf
+
+\For{$col \gets 0$ to Papan.getCol() - 1}
+    \If{isOptimized = true}
+        \State warna $\gets$ Papan.getElmt(row, col) - 'A'
+        \If{usedColumn[col] = 0 \textbf{and} color[warna] = 0 \textbf{and} check8Direction(row, col, Papan)}
+            \State color[warna] $\gets$ 1
+            \State board[row][col] $\gets$ 1
+            \State usedColumn[col] $\gets$ 1
+
+            \State debugCases(Papan)
+            \State solveBruteForce(row + 1, Papan)
+
+            \State color[warna] $\gets$ 0
+            \State board[row][col] $\gets$ 0
+            \State usedColumn[col] $\gets$ 0
+        \EndIf
+    \Else
+        \State board[row][col] $\gets$ 1
+        \State debugCases(Papan)
+        \State solveBruteForce(row + 1, Papan)
+        \State board[row][col] $\gets$ 0
+    \EndIf
+\EndFor
+
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\section{Fitur Pelengkap}
+
+Program juga mengimplementasikan beberapa fitur lainnya, antara lain:
+
+\begin{enumerate}
+    \item Graphical User Interface (GUI) : Antarmuka grafis menggunakan JavaFX
+    \item Live Update : Saat solver berjalan, papan di-\textit{render} ulang setiap langkah dengan delay yang bisa diatur menggunakan slider sehingga pengguna dapat melihat proses pencarian secara \textit{real-time}
+    \item Output as Text : Solusi bisa disimpan ke file \texttt{.txt} 
+    \item Output as Image : Solusi bisa disimpan sebagai file \texttt{.png}
+\end{enumerate}
+

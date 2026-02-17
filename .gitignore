@@ -1,4 +1,4 @@
 target/
 .vscode/
-!**/.gitkeep
+.gitkeep
 .DS_Store
