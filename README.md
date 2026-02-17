@@ -1,9 +1,9 @@
 # Queens Linkedin Solver
 
 ## Deskripsi Program
-Program ini merupakan solver untuk permainan Queens Linkedin yang menggunakan algoritma Brute Force. Program dapat menyelesaikan puzzle dengan mencari susunan ratu pada papan yang memenuhi constraint tertentu. Program menyediakan antarmuka GUI berbasis JavaFX untuk kemudahan penggunaan dan visualisasi solusi.
+Program ini merupakan solver untuk permainan Queens Linkedin yang menggunakan algoritma **Brute Force**. Program dapat menyelesaikan puzzle dengan mencari susunan ratu pada papan yang memenuhi constraint tertentu. Program menyediakan antarmuka GUI berbasis JavaFX untuk kemudahan penggunaan dan visualisasi solusi.
 
-![queens-solver-simulation](https://github.com/user-attachments/assets/a45be6d8-5f2d-4c6b-a613-56bea3c8a861)
+![queen-solver](https://github.com/user-attachments/assets/ffd5c29f-6252-4910-962a-fffafcf266d5)
 
 ## Requirement Program
 - Java Development Kit (JDK) 11 atau lebih tinggi
