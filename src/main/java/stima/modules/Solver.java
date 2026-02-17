@@ -65,7 +65,7 @@ public class Solver {
      */
     private void solveBruteForce(int row, Board Papan)
     {
-        if (cancelled || solutionCount > 0) return;
+        if (cancelled) return;
         
         if (this.isOptimized == true) 
         {
