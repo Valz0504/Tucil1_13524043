@@ -1,17 +1,25 @@
 package stima;
 
-import stima.modules.Board;
-import stima.modules.Solver;
-import java.util.Scanner;
-import java.util.ArrayList;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import stima.gui.Page;
+
+// import stima.modules.Board;
+// import stima.modules.Solver;
+// import java.util.Scanner;
+// import java.util.ArrayList;
+// import java.io.File;
+// import java.io.FileNotFoundException;
+// import java.io.IOException;
+// import java.io.FileWriter;
+// import java.io.PrintWriter;
 
 public class App {
     public static void main(String[] args) {
+
+        // gui
+        Page.main(args);
+
+        // cli
+        /*
         Scanner input = new Scanner(System.in);
 
         System.out.println("Masukkan nama file test case: ");
@@ -133,5 +141,6 @@ public class App {
         }
         
         input.close();
+        */
     }
 }

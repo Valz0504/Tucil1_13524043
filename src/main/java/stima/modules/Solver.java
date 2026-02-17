@@ -2,6 +2,7 @@ package stima.modules;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.function.BiConsumer;
 
 public class Solver {
 
@@ -17,6 +18,8 @@ public class Solver {
     private int solutionCount;
     private int delayMs = 30;
     private boolean isOptimized = false;
+    private volatile boolean cancelled = false;
+    private BiConsumer<int[][], Board> stepBack = null;
 
     /**
      * Parent function untuk solve queens dengan inisiasi atribut dan pemanggilan prosedur lain
@@ -62,10 +65,15 @@ public class Solver {
      */
     private void solveBruteForce(int row, Board Papan)
     {
+        if (cancelled || solutionCount > 0) return;
         
+        if (this.isOptimized == true) 
+        {
+            caseCount++;
+        }
+
         if (row == Papan.getRow()) 
         {   
-            caseCount++;
             if (this.isOptimized == true)
             {
                 solutionCount++;
@@ -80,6 +88,7 @@ public class Solver {
             }
             else
             {
+                caseCount++;
                 if (isBoardValid(Papan.getRow() - 1, Papan))
                 {
                     solutionCount++;
@@ -162,7 +171,7 @@ public class Solver {
      * 
      * @return true jika Board valid, false jika tidak
      */
-    private boolean isBoardValid(int row, Board Papan)
+    public boolean isBoardValid(int row, Board Papan)
     {
         for (int i = 0; i <= row; i++)
         {
@@ -218,16 +227,28 @@ public class Solver {
      */
     private void debugCases(Board Papan)
     {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        System.out.println("Sedang melakukan pencarian...");
-        System.out.flush();
-        this.printBoard(Papan);
-        System.out.flush();
+        if (stepBack != null) {
+            int[][] snapshot = new int[board.length][board[0].length];
+            for (int i = 0; i < board.length; i++) {
+                System.arraycopy(board[i], 0, snapshot[i], 0, board[i].length);
+            }
+            stepBack.accept(snapshot, Papan);
+        }
+
+        if (stepBack == null) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+            System.out.println("Finding solution...");
+            System.out.flush();
+            this.printBoard(Papan);
+            System.out.flush();
+        }
+
         try {
             Thread.sleep(delayMs);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            cancelled = true;
         }
     }
 
@@ -289,5 +310,31 @@ public class Solver {
     public int[][] getBoard()
     {
         return this.board;
+    }
+
+    /**
+     * Set callback yang dipanggil setiap langkah solver
+     * 
+     * @param callback menerima (int[][] boardSnapshot, Board papan)
+     */
+    public void setStepBack(BiConsumer<int[][], Board> callback)
+    {
+        this.stepBack = callback;
+    }
+
+    /**
+     * Cancel solver yang sedang berjalan
+     */
+    public void cancel()
+    {
+        this.cancelled = true;
+    }
+
+    /**
+     * Cek apakah solver sudah di-cancel
+     */
+    public boolean isCancelled()
+    {
+        return this.cancelled;
     }
 }
