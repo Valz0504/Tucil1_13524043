@@ -97,30 +97,35 @@ public class App {
             System.out.println("\nSolusi:");
             solver.printBoard(Papan);
 
-            try {
-                String outputFileName = "test/output/output_" + fileName;
-                File output = new File(outputFileName);
-                output.getParentFile().mkdirs();
-                
-                PrintWriter writer = new PrintWriter(new FileWriter(output, false));
-
-                for (int i = 0; i < Papan.getRow(); i++)
-                {
-                    for (int j = 0; j < Papan.getCol(); j++)
+            System.out.println();
+            System.out.println("Apakah Anda ingin menyimpan solusi? (yes/no)");
+            String keep = input.nextLine();
+            if (keep.equalsIgnoreCase("yes"))
+            {
+                try {
+                    String outputFileName = "test/output/output_" + fileName;
+                    File output = new File(outputFileName);
+                    output.getParentFile().mkdirs();
+                    
+                    PrintWriter writer = new PrintWriter(new FileWriter(output, false));
+    
+                    for (int i = 0; i < Papan.getRow(); i++)
                     {
-                        writer.print(solver.getBoard()[i][j] == 1 ? '#' : Papan.getElmt(i, j));
+                        for (int j = 0; j < Papan.getCol(); j++)
+                        {
+                            writer.print(solver.getBoard()[i][j] == 1 ? '#' : Papan.getElmt(i, j));
+                        }
+                        writer.println();
                     }
-                    writer.println();
+                    
+                    writer.close();
+                    System.out.println("\nOutput solusi disimpan di: " + outputFileName);
+                    
+                } catch (IOException e) {
+                    System.out.println("Ada error saat menyimpan file :(");
+                    e.printStackTrace();
                 }
-                
-                writer.close();
-                System.out.println("\nOutput solusi disimpan di: " + outputFileName);
-                
-            } catch (IOException e) {
-                System.out.println("Ada error saat menyimpan file :(");
-                e.printStackTrace();
             }
-            
         }
         else
         {

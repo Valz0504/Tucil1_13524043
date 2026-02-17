@@ -5,6 +5,9 @@ import java.time.Instant;
 
 public class Solver {
 
+    /**
+     * Atribut
+     */
     private int[] color;
     private int[] usedColumn;
     private int[][] board;
@@ -15,6 +18,12 @@ public class Solver {
     private int delayMs = 30;
     private boolean isOptimized = false;
 
+    /**
+     * Parent function untuk solve queens dengan inisiasi atribut dan pemanggilan prosedur lain
+     * 
+     * @param Papan
+     * @return true jika solusi ada, false jika tidak
+     */
     public boolean solveQueens(Board Papan)
     {
         color = new int[26];
@@ -41,12 +50,22 @@ public class Solver {
         return false;
     }
 
+    /**
+     * Algoritma brute force backtracking tanpa heuristik yang mencoba menempatkan satu Queen di setiap baris
+     * dengan percobaan untuk menempatkannya di masing-masing kolom, kompleksitasnya O(n^n)
+     * 
+     * Ini ga ada heuristik atau pruning semacamnya sih kalau menurut saya, dengan mengetahui aturan permainan,
+     * better brute force untuk setiap baris, coba tempatkan Queen di masing-masing kolom lalu lanjut ke baris selanjutnya
+     * 
+     * @param row
+     * @param Papan
+     */
     private void solveBruteForce(int row, Board Papan)
     {
-        caseCount++;
         
         if (row == Papan.getRow()) 
-        {
+        {   
+            caseCount++;
             if (this.isOptimized == true)
             {
                 solutionCount++;
@@ -111,6 +130,15 @@ public class Solver {
         }
     }
 
+    /**
+     * { Mengecek 8 arah adjacent apakah ada Queen yang ditempatkan atau tidak }
+     * 
+     * @param row
+     * @param col
+     * @param Papan
+     * 
+     * @return true jika di ke 8 arah tidak ada queens yang diletakkan, false jika ada
+     */
     private boolean check8Direction(int row, int col, Board Papan)
     {
         for (int i = -1; i <= 1; i++) 
@@ -126,6 +154,14 @@ public class Solver {
         return true;
     }
 
+    /**
+     * { Mengecek apakah Board merupakan solusi yang valid untuk permainan Queens }
+     * 
+     * @param row
+     * @param Papan
+     * 
+     * @return true jika Board valid, false jika tidak
+     */
     private boolean isBoardValid(int row, Board Papan)
     {
         for (int i = 0; i <= row; i++)
@@ -158,6 +194,11 @@ public class Solver {
         return true;
     }
 
+    /**
+     * Print kondisi papan
+     * 
+     * @param Papan
+     */
     public void printBoard(Board Papan)
     {
         for (int i = 0; i < Papan.getRow(); i++)
@@ -170,11 +211,17 @@ public class Solver {
         }
     }
 
+    /**
+     * Live Update Papan
+     * 
+     * @param Papan
+     */
     private void debugCases(Board Papan)
     {
         System.out.print("\033[H\033[2J");
         System.out.flush();
-        System.out.println("=== Kasus #" + caseCount + " | Solusi: " + solutionCount + " ===");
+        System.out.println("Sedang melakukan pencarian...");
+        System.out.flush();
         this.printBoard(Papan);
         System.out.flush();
         try {
@@ -184,31 +231,61 @@ public class Solver {
         }
     }
 
+    /**
+     * Getter execution time
+     * 
+     * @return
+     */
     public Duration getExecutionTime() 
     {
         return this.executionTime;
     }
 
+    /**
+     * Getter case count
+     * 
+     * @return
+     */
     public int getCaseCount() 
     {
         return this.caseCount;
     }
 
+    /**
+     * Getter solution count
+     * 
+     * @return
+     */
     public int getSolutionCount() 
     {
         return this.solutionCount;
     }
 
+    /**
+     * Setter delayMs
+     * 
+     * @param delayMs
+     */
     public void setDelay(int delayMs) 
     {
         this.delayMs = delayMs;
     }
 
+    /**
+     * Setter isOptimized
+     * 
+     * @return
+     */
     public void setOptimized() 
     {
         this.isOptimized = true;
     }
 
+    /**
+     * Getter Board
+     * 
+     * @return
+     */
     public int[][] getBoard()
     {
         return this.board;
