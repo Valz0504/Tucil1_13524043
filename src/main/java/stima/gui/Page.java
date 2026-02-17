@@ -89,6 +89,11 @@ public class Page extends Application {
 
         try 
         {
+            javafx.scene.image.Image icon = new javafx.scene.image.Image(
+                getClass().getResourceAsStream("/assets/Queens.png")
+            );
+            primaryStage.getIcons().add(icon);
+            
             if (java.awt.Taskbar.isTaskbarSupported()) 
             {
                 java.awt.Taskbar taskbar = java.awt.Taskbar.getTaskbar();
