@@ -31,7 +31,7 @@ mvn clean package
 ### Opsi 1: Menjalankan GUI dengan JAR
 Setelah kompilasi, jalankan file JAR yang telah dibuat:
 ```bash
-java -jar target/queens-linkedin-solver.jar
+java -jar bin/queens-solver.jar
 ```
 
 atau _double click_ file executable `queens-solver.jar`
