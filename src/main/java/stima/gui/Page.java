@@ -222,7 +222,10 @@ public class Page extends Application {
     {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose a test case file");
-        fileChooser.setInitialDirectory(new File("test/input"));
+        File initialDir = new File("test/input");
+        if (initialDir.exists() && initialDir.isDirectory()) {
+            fileChooser.setInitialDirectory(initialDir);
+        }
         fileChooser.getExtensionFilters().add(
             new FileChooser.ExtensionFilter("Text Files", "*.txt")
         );
@@ -454,7 +457,10 @@ public class Page extends Application {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save solution");
-        fileChooser.setInitialDirectory(new File("test/output"));
+        File initialDir = new File("test/output");
+        if (initialDir.exists() && initialDir.isDirectory()) {
+            fileChooser.setInitialDirectory(initialDir);
+        }
         fileChooser.getExtensionFilters().add(
             new FileChooser.ExtensionFilter("Text Files", "*.txt")
         );
@@ -506,7 +512,10 @@ public class Page extends Application {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save as image");
-        fileChooser.setInitialDirectory(new File("test/output"));
+        File initialDir = new File("test/output");
+        if (initialDir.exists() && initialDir.isDirectory()) {
+            fileChooser.setInitialDirectory(initialDir);
+        }
         fileChooser.getExtensionFilters().add(
             new FileChooser.ExtensionFilter("PNG Image", "*.png")
         );
