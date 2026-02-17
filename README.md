@@ -50,4 +50,12 @@ mvn clean javafx:run
 5. Program akan menampilkan solusi yang ditemukan menggunakan algoritma Brute Force
 
 ## Author
-**Emilio Justin - 13524043**
+| Nama                           | NIM      |
+| ------------------------------ | -------- |
+| Emilio Justin                  | 13524043 |
+
+---
+Tugas Kecil 1 -- Strategi Algoritma (IF2211)<br>
+Program Studi Teknik Informatika<br>
+Institut Teknologi Bandung<br>
+2026
